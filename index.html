@@ -21,7 +21,7 @@
         }
         
         .container {
-            width: 85%;
+            width: 90%;
             max-width: 320px;
             position: relative;
             padding: 10px;
@@ -68,7 +68,7 @@
         .btn-join {
             width: 100%;
             padding: 14px 0;
-            margin-top: 12px;
+            margin-top: 15px;
             background: linear-gradient(45deg, #FFD700, #D4AF37, #FFD700);
             border: 2px solid transparent;
             border-radius: 8px;
@@ -184,17 +184,17 @@
     </div>
 
     <script>
-        // Efek Salju
+        // Efek Salju yang dioptimalkan
         function createSnow() {
             const snowContainer = document.getElementById('snow');
-            const snowflakeCount = 30; // Reduced for mobile performance
+            const snowflakeCount = 25; // Optimal for mobile
             
             for (let i = 0; i < snowflakeCount; i++) {
                 const snowflake = document.createElement('div');
                 snowflake.classList.add('snowflake');
                 
-                // Random size between 1px and 4px
-                const size = Math.random() * 3 + 1;
+                // Size between 1px and 3px
+                const size = Math.random() * 2 + 1;
                 snowflake.style.width = `${size}px`;
                 snowflake.style.height = `${size}px`;
                 
@@ -202,50 +202,56 @@
                 snowflake.style.left = `${Math.random() * 100}%`;
                 snowflake.style.top = `${Math.random() * -20}%`;
                 
-                // Random animation duration (5-12s)
-                const duration = Math.random() * 7 + 5;
+                // Animation duration 5-10s
+                const duration = Math.random() * 5 + 5;
                 snowflake.style.animationDuration = `${duration}s`;
                 
                 // Random delay
-                snowflake.style.animationDelay = `${Math.random() * 5}s`;
+                snowflake.style.animationDelay = `${Math.random() * 3}s`;
                 
                 snowContainer.appendChild(snowflake);
             }
         }
         
-        // Efek Gyro yang lebih halus untuk mobile
+        // Efek Gyro yang dioptimalkan untuk mobile
         function setupGyro() {
             const container = document.getElementById('gyroContainer');
             let lastX = 0;
             let lastY = 0;
-            const smoothFactor = 0.2;
+            const smoothFactor = 0.15;
+            const maxTilt = 5; // degrees
             
             if (window.DeviceOrientationEvent) {
                 window.addEventListener('deviceorientation', function(e) {
-                    const tiltX = e.beta ? e.beta * 0.05 : 0;  // Reduced sensitivity
-                    const tiltY = e.gamma ? e.gamma * 0.05 : 0; // Reduced sensitivity
+                    const tiltX = e.beta ? Math.min(maxTilt, Math.max(-maxTilt, e.beta * 0.03)) : 0;
+                    const tiltY = e.gamma ? Math.min(maxTilt, Math.max(-maxTilt, e.gamma * 0.03)) : 0;
                     
-                    // Smoothing
+                    // Smoothing effect
                     lastX = lastX * (1 - smoothFactor) + tiltX * smoothFactor;
                     lastY = lastY * (1 - smoothFactor) + tiltY * smoothFactor;
                     
                     container.style.transform = `rotateX(${lastX}deg) rotateY(${lastY}deg)`;
-                });
+                }, { passive: true });
             } else {
-                // Fallback for devices without gyro
+                // Fallback for non-gyro devices
                 document.addEventListener('mousemove', function(e) {
-                    const x = (e.clientX / window.innerWidth - 0.5) * 5;
-                    const y = (e.clientY / window.innerHeight - 0.5) * 3;
+                    const x = (e.clientX / window.innerWidth - 0.5) * 3;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 2;
                     
                     container.style.transform = `rotateX(${-y}deg) rotateY(${x}deg)`;
-                });
+                }, { passive: true });
             }
         }
         
-        // Inisialisasi setelah DOM siap
+        // Inisialisasi yang lebih baik
         document.addEventListener('DOMContentLoaded', function() {
-            createSnow();
+            // Delay snow effect slightly for better perceived performance
+            setTimeout(createSnow, 300);
             setupGyro();
+            
+            // Preload image for smoother experience
+            const img = new Image();
+            img.src = 'https://iili.io/FN9dGDv.md.jpg';
         });
     </script>
 </body>
